@@ -1,2 +1,2 @@
-# orderAnalysis
-##A java program to analyze order distribution
+# OrderAnalysis
+##A java program to analyse order distribution
