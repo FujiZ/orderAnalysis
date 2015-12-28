@@ -29,35 +29,15 @@ public class Analyzer {
         }
     }
 
-    public void output(String filename){
-        File file=new File(filename);
-        BufferedWriter writer = null;
-        try {
-            writer=new BufferedWriter(new PrintWriter(file));
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
+    public void outputTime(String filename){
+        outputData(filename,actualTimeCountMap);
 
-        for(Map.Entry<Long,Long> entry:actualTimeCountMap.entrySet())
-            try {
-                if (writer != null) {
-                    writer.write("Time: " + entry.getKey() + ";Count: " + entry.getValue()+"\n");
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-        for(Map.Entry<Long,Long> entry:actualDistanceCountMap.entrySet()){
-            try {
-                if (writer != null) {
-                    writer.write("Distance: "+entry.getKey()+";Count: "+entry.getValue()+"\n");
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
     }
 
+    public void outputDistance(String filename){
+        outputData(filename,actualDistanceCountMap);
+
+    }
     public void outputTimeChart(){
         outputChart("time",actualTimeCountMap);
     }
@@ -66,10 +46,25 @@ public class Analyzer {
         outputChart("distance",actualDistanceCountMap);
     }
 
+    private void outputData(String filename,Map<Long,Long> dataMap){
+
+        File file=new File(filename);
+        FileWriter writer;
+        try {
+            writer=new FileWriter(file);
+            for(Map.Entry<Long,Long> entry:dataMap.entrySet())
+                writer.write(entry.getKey() + "," + entry.getValue()+"\n");
+            writer.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
 
     private void outputChart(String name,Map<Long,Long> dataMap){
         //先将数据取对数，放到另外一个map中
-        Map<Long,Double> lgDataMap=new HashMap<Long, Double>();
+        Map<Long,Double> lgDataMap=new HashMap<>();
         for(Map.Entry<Long,Long> entry:dataMap.entrySet()){
             Long lgKey=(long)Math.log(entry.getKey());
             Double lgValue=Math.log(entry.getValue());

@@ -11,7 +11,7 @@ import java.util.Date;
 public class Converter {
 
     public static Date convertTime(String timeString) throws ParseException {
-        Date time=null;
+        Date time;
         time = dateFormat.parse(timeString);
         return time;
     }
