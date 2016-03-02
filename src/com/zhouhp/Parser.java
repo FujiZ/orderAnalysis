@@ -1,6 +1,5 @@
 package com.zhouhp;
 
-import com.sun.org.apache.xpath.internal.operations.Or;
 
 import java.io.*;
 import java.util.Iterator;
@@ -47,14 +46,11 @@ public class Parser {
             valid=true;
             try {
                 entry=OrderEntry.parseEntry(lineBuffer);
-            }
-            catch (InvalidEntryException e){
-                valid=false;
-            }
-            try {
                 lineBuffer=bufferedReader.readLine();
-            }catch (IOException e){
-                e.printStackTrace();
+            }
+            catch (InvalidEntryException|IOException e){
+                System.out.println(e.getMessage());
+                valid=false;
             }
         }
         return entry;

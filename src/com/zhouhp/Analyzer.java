@@ -1,5 +1,8 @@
 package com.zhouhp;
 
+import com.zhouhp.dbscan.Dbscan;
+import com.zhouhp.dbscan.Point;
+
 import java.io.*;
 import java.util.*;
 
@@ -10,8 +13,8 @@ public class Analyzer {
 
     public Analyzer(String filename){
         parser=new Parser(filename);
-        actualTimeCountMap=new TreeMap<Long, Long>();
-        actualDistanceCountMap=new TreeMap<Long, Long>();
+        actualTimeCountMap=new TreeMap<>();
+        actualDistanceCountMap= new TreeMap<>();
     }
 
     public void run(){
@@ -29,15 +32,29 @@ public class Analyzer {
         }
     }
 
+    public void runDbScan(int e,int minp,String outputDir){
+        Set<Point> pointSet=new HashSet<>();
+        Iterator<OrderEntry> iterator=parser.getEntryIterator();
+        while (iterator.hasNext()){
+            OrderEntry orderEntry=iterator.next();
+            if(orderEntry.hasCoordinate()){
+                pointSet.add(orderEntry.getActualBoardPoint());
+            }
+        }
+
+        Dbscan dbscan=new Dbscan(pointSet,e,minp);
+        dbscan.applyDbscan();
+        dbscan.outputResult(outputDir);
+    }
+
     public void outputTime(String filename){
         outputData(filename,actualTimeCountMap);
-
     }
 
     public void outputDistance(String filename){
         outputData(filename,actualDistanceCountMap);
-
     }
+
     public void outputTimeChart(){
         outputChart("time",actualTimeCountMap);
     }
